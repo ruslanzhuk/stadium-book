@@ -1,9 +1,12 @@
-FROM php:8.3-fpm-bookworm
+FROM php:8.4-fpm-bookworm
 
 
 WORKDIR /var/www/html
 
 
+# ==========================================================
+# System packages + PHP extensions
+# ==========================================================
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
@@ -23,23 +26,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
+# ==========================================================
+# Composer
+# ==========================================================
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-
-COPY symfony-api/composer.json symfony-api/composer.lock ./
-
-
-RUN composer install \
-    --no-interaction \
-    --prefer-dist \
-    --optimize-autoloader \
-    --no-scripts
+# ==========================================================
+# Entrypoint
+# ==========================================================
+COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
 
 
-COPY symfony-api .
-
-
-RUN composer dump-autoload --optimize
+ENTRYPOINT ["entrypoint"]
 
 
 CMD ["php-fpm"]
