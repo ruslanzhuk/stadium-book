@@ -2,18 +2,32 @@
 
 namespace App\IdentityContext\Domain\User;
 
+use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 
+#[ORM\Entity]
+#[ORM\Table(name: 'users')]
 class User
 {
-    private ?UserId $id;
-    private ?Email $email;
-    private ?PasswordHash $passwordHash;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id;
+    #[ORM\Embedded(class: Email::class)]
+    private Email $email;
+    #[ORM\Embedded(class: PasswordHash::class)]
+    private PasswordHash $passwordHash;
+    #[ORM\Column(length: 100)]
     private string $firstName;
+    #[ORM\Column(length: 100)]
     private string $lastName;
-    private ?DateTimeImmutable $createdAt;
+    #[ORM\Column]
+    private DateTimeImmutable $createdAt;
+    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt;
+    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $deletedAt;
+    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $emailVerifiedAt;
 
 
@@ -38,27 +52,27 @@ class User
         $this->id = null;
     }
 
-    public function id(): ?UserId
+    public function id(): ?int
     {
         return $this->id;
     }
 
-    public function email(): ?Email
+    public function email(): Email
     {
         return $this->email;
     }
 
-    public function passwordHash(): ?PasswordHash
+    public function passwordHash(): PasswordHash
     {
         return $this->passwordHash;
     }
 
-    public function firstName(): ?string
+    public function firstName(): string
     {
         return $this->firstName;
     }
 
-    public function lastName(): ?string
+    public function lastName(): string
     {
         return $this->lastName;
     }
