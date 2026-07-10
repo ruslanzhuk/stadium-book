@@ -3,6 +3,9 @@
 namespace App\IdentityContext\Application\RegisterUser;
 
 use App\IdentityContext\Domain\User\Email;
+use App\IdentityContext\Domain\User\User;
+use App\IdentityContext\Domain\User\PasswordHasher;
+use App\IdentityContext\Domain\User\UserRepository;
 
 final readonly class RegisterUserHandler
 {
