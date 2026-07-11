@@ -4,8 +4,11 @@ namespace App\IdentityContext\UI\Controller;
 
 use App\IdentityContext\Application\GetCurrentUser\GetCurrentUserCommand;
 use App\IdentityContext\Application\GetCurrentUser\GetCurrentUserHandler;
+use App\IdentityContext\Application\LogoutUser\LogoutUserCommand;
+use App\IdentityContext\Application\LogoutUser\LogoutUserHandler;
 use App\IdentityContext\Application\RegisterUser\RegisterUserCommand;
 use App\IdentityContext\Application\RegisterUser\RegisterUserHandler;
+use App\IdentityContext\Infrastructure\Security\SecurityUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,5 +56,27 @@ class AuthController extends AbstractController
 
 
         return $this->json($result);
+    }
+
+
+    #[Route('/api/logout', methods: ['POST'])]
+    public function logout(
+        LogoutUserHandler $handler
+    ): JsonResponse
+    {
+        /** @var SecurityUser $user */
+        $user = $this->getUser();
+
+
+        $handler(
+            new LogoutUserCommand(
+                $user->id()
+            )
+        );
+
+
+        return $this->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
 }
