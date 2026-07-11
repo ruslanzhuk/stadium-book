@@ -2,6 +2,8 @@
 
 namespace App\IdentityContext\UI\Controller;
 
+use App\IdentityContext\Application\GetCurrentUser\GetCurrentUserCommand;
+use App\IdentityContext\Application\GetCurrentUser\GetCurrentUserHandler;
 use App\IdentityContext\Application\RegisterUser\RegisterUserCommand;
 use App\IdentityContext\Application\RegisterUser\RegisterUserHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,5 +35,23 @@ class AuthController extends AbstractController
             ["message" => "Registration successful"],
             201
         );
+    }
+
+    #[Route('/me', name: 'api_me', methods: ['GET'])]
+    public function getCurrentUser(
+        GetCurrentUserHandler $handler
+    ): JsonResponse
+    {
+        $securityUser = $this->getUser();
+
+
+        $result = $handler(
+            new GetCurrentUserCommand(
+                $securityUser->id()
+            )
+        );
+
+
+        return $this->json($result);
     }
 }
