@@ -59,7 +59,7 @@ class AuthController extends AbstractController
     }
 
 
-    #[Route('/api/logout', methods: ['POST'])]
+    #[Route('/logout', methods: ['POST'])]
     public function logout(
         LogoutUserHandler $handler
     ): JsonResponse
