@@ -13,6 +13,8 @@ services:
       postgres:
         condition: service_healthy
 
+    restart: unless-stopped
+
 
   nginx:
     image: nginx:1.27-alpine
@@ -55,6 +57,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  redis:
+    image: redis:7-alpine
+
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:

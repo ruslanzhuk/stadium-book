@@ -1,0 +1,84 @@
+FROM php:8.4-fpm-bookworm AS base
+
+WORKDIR /var/www/html
+
+# ==========================================================
+# System packages + PHP extensions
+# ==========================================================
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    unzip \
+    libpq-dev \
+    libicu-dev \
+    libzip-dev \
+    && docker-php-ext-install \
+        pdo_pgsql \
+        intl \
+        zip \
+        opcache \
+        sockets \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# ==========================================================
+# Composer
+# ==========================================================
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+
+# ==========================================================
+# Dependencies stage
+# ==========================================================
+FROM base AS dependencies
+
+WORKDIR /var/www/html
+
+COPY symfony-api/composer.json symfony-api/composer.lock ./
+
+RUN composer install \
+    --no-interaction \
+    --prefer-dist \
+    --no-dev \
+    --optimize-autoloader \
+    --no-scripts
+
+
+# ==========================================================
+# Production stage
+# ==========================================================
+FROM base AS production
+
+WORKDIR /var/www/html
+
+# Copy Composer dependencies
+COPY --from=dependencies /var/www/html/vendor ./vendor
+
+# Copy application source code
+COPY symfony-api ./
+
+# ==========================================================
+# Production PHP configuration
+# ==========================================================
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# ==========================================================
+# Symfony cache
+# ==========================================================
+ENV APP_ENV=prod
+
+RUN php bin/console cache:clear --no-warmup
+
+# ==========================================================
+# Permissions
+# ==========================================================
+RUN chown -R www-data:www-data \
+    var
+
+USER www-data
+
+# ==========================================================
+# Start PHP-FPM
+# ==========================================================
+CMD ["php-fpm"]
