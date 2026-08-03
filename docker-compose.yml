@@ -19,6 +19,8 @@ services:
       postgres:
         condition: service_healthy
 
+    restart: unless-stopped
+
 
   nginx:
     image: nginx:1.27-alpine
@@ -83,7 +85,19 @@ services:
     depends_on:
       - php
 
+  redis:
+    image: redis:7-alpine
+
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
   vendor:
   frontend_node_modules:
+  redis_data:
