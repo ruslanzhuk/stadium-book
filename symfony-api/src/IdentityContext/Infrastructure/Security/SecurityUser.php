@@ -11,6 +11,7 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
         private int $id,
         private string $email,
         private string $passwordHash,
+        private array $roles = ['ROLE_USER'],
     ) {
     }
 
@@ -26,7 +27,7 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
     public function eraseCredentials(): void

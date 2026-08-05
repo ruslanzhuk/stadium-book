@@ -2,6 +2,7 @@
 
 namespace App\IdentityContext\Domain\User;
 
+use App\IdentityContext\Domain\User\Exception\InvalidEmailException;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -15,7 +16,7 @@ final class Email
         $value = mb_strtolower(trim($value));
 
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid email');
+            throw new InvalidEmailException($value);
         }
 
         $this->value = $value;
@@ -26,9 +27,9 @@ final class Email
         return $this->value;
     }
 
-    public function equals(Email $email): bool
+    public function equals(Email $other): bool
     {
-        return $this->value === $email->value;
+        return $this->value === $other->value;
     }
 
     public function __toString(): string

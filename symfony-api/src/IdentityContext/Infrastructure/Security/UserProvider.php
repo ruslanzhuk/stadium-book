@@ -22,14 +22,15 @@ final readonly class UserProvider implements UserProviderInterface
             new Email($identifier)
         );
 
-        if (null === $user) {
-            throw new UserNotFoundException();
+        if ($user === null) {
+            throw new UserNotFoundException(sprintf('User with email "%s" not found.', $identifier));
         }
 
         return new SecurityUser(
             id: $user->id(),
-            email: $user->email(),
+            email: $user->email()->value(),
             passwordHash: $user->passwordHash()->value(),
+            roles: $user->roles(),
         );
     }
 
@@ -41,6 +42,6 @@ final readonly class UserProvider implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return $class === SecurityUser::class;
+        return $class === SecurityUser::class || is_subclass_of($class, SecurityUser::class);
     }
 }

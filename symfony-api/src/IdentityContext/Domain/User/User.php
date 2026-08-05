@@ -7,7 +7,7 @@ use DateTimeImmutable;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
-class User
+final class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,14 +21,18 @@ class User
     private string $firstName;
     #[ORM\Column(length: 100)]
     private string $lastName;
+
+    /** @var list<string> */
+    #[ORM\Column(type: 'json')]
+    private array $roles = ['ROLE_USER'];
     #[ORM\Column]
     private DateTimeImmutable $createdAt;
     #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt = null;
     #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $deletedAt;
+    private ?DateTimeImmutable $deletedAt = null;
     #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $emailVerifiedAt;
+    private ?DateTimeImmutable $emailVerifiedAt = null;
 
 
     public function __construct(
@@ -45,9 +49,6 @@ class User
         $this->lastName = $lastName;
 
         $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-        $this->deletedAt = null;
-        $this->emailVerifiedAt = null;
 
         $this->id = null;
     }
@@ -77,6 +78,22 @@ class User
         return $this->lastName;
     }
 
+    public function roles(): array
+    {
+        $roles = $this->roles;
+
+        if (!in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_values(array_unique($roles));
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles(), true);
+    }
+
     public function updateName(string $firstName, string $lastName): void
     {
         $this->firstName = $firstName;
@@ -98,10 +115,16 @@ class User
     public function delete(): void
     {
         $this->deletedAt = new DateTimeImmutable();
+        $this->touch();
     }
 
     public function isDeleted(): bool
     {
         return $this->deletedAt !== null;
+    }
+
+    public function touch(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
     }
 }

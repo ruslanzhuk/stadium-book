@@ -2,9 +2,10 @@
 
 namespace App\IdentityContext\Application\GetCurrentUser;
 
+use App\IdentityContext\Domain\User\Exception\UserNotFoundException;
 use App\IdentityContext\Domain\User\UserRepository;
 
-class GetCurrentUserHandler
+final readonly class GetCurrentUserHandler
 {
     public function __construct(
         private UserRepository $userRepository
@@ -12,18 +13,23 @@ class GetCurrentUserHandler
     }
 
 
-    public function __invoke(GetCurrentUserCommand $query): array
+    public function handle(GetCurrentUserCommand $query): CurrentUserResponse
     {
         $user = $this->userRepository->findById(
             $query->userId
         );
 
+        if ($user === null) {
+            throw new UserNotFoundException($query->userId);
+        }
 
-        return [
-            'id' => $user->id(),
-            'email' => $user->email()->value(),
-            'firstName' => $user->firstName(),
-            'lastName' => $user->lastName(),
-        ];
+
+        return new CurrentUserResponse(
+            id: $user->id(),
+            email: $user->email()->value(),
+            firstName:  $user->firstName(),
+            lastName:  $user->lastName(),
+            roles: $user->roles(),
+        );
     }
 }

@@ -21,14 +21,45 @@ final readonly class DoctrineUserRepository implements UserRepository
 
     public function findById(int $id): ?User
     {
-        return $this->entityManager->find(User::class, $id);
+        return $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :id')
+            ->andWhere('u.deletedAt IS NULL')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function findByEmail(Email $email): ?User
     {
-        return $this->entityManager->getRepository(User::class)
-            ->findOneBy([
-                'email.value' => $email
-            ]);
+        return $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.email.value = :email')
+            ->andWhere('u.deletedAt IS NULL')
+            ->setParameter('email', $email->value())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function existsByEmail(Email $email): bool
+    {
+        $count = (int) $this->entityManager->createQueryBuilder()
+            ->select('count(u.id)')
+            ->from(User::class, 'u')
+            ->where('u.email.value = :email')
+            ->andWhere('u.deletedAt IS NULL')
+            ->setParameter('email', $email->value())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count > 0;
+    }
+
+    public function remove(User $user): void
+    {
+        $user->delete();
+        $this->save($user);
     }
 }
