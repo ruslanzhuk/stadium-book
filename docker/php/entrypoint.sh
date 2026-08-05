@@ -2,7 +2,7 @@
 
 set -e
 
-if [ ! -d "vendor" ]; then
+if [ ! -f "vendor/autoload.php" ]; then
     echo "Installing Composer dependencies..."
 
     composer install \
