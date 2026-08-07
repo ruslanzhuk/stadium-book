@@ -70,7 +70,7 @@ class Venue
         $this->id = VenueId::generate();
     }
 
-    public function id(): ?VenueId
+    public function id(): VenueId
     {
         return $this->id;
     }
@@ -78,6 +78,11 @@ class Venue
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
     }
 
     public function city(): string
