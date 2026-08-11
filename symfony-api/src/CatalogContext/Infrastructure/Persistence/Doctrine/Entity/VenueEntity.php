@@ -1,60 +1,52 @@
 <?php
 
-namespace App\CatalogContext\Domain\Venue;
+namespace App\CatalogContext\Infrastructure\Persistence\Doctrine\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
-class Venue
-{
-    private VenueId $id;
 
+#[ORM\Entity]
+#[ORM\Table(name: "venues")]
+class VenueEntity
+{
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    private string $id;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $name;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $slug;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $city;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $address;
 
+    #[ORM\Column(type: 'string', length: 3, nullable: false)]
     private string $country;
 
+    #[ORM\Column(type: 'integer', nullable: false)]
     private int $capacity;
 
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $imageUrl = null;
 
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $isActive  = true;
 
+    #[ORM\Column]
     private DateTimeImmutable $createdAt;
+    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
     public function __construct(
-        string $name,
-        string $slug,
-        string $city,
-        string $address,
-        string $country,
-        int $capacity,
-        ?string $description = null,
-        ?string $imageUrl = null,
-    )
-    {
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->city = $city;
-        $this->address = $address;
-        $this->country = $country;
-        $this->capacity = $capacity;
-        $this->description = $description;
-        $this->imageUrl = $imageUrl;
-
-        $this->createdAt = new DateTimeImmutable();
-
-        $this->id = VenueId::generate();
-    }
-
-    public static function reconstitute(
-        VenueId $id,
+        string $id,
         string $name,
         string $slug,
         string $city,
@@ -65,29 +57,23 @@ class Venue
         ?string $imageUrl,
         bool $isActive,
         DateTimeImmutable $createdAt,
-        ?DateTimeImmutable $updatedAt
-    ) : self
-    {
-        $venue = new self(
-            name: $name,
-            slug: $slug,
-            city: $city,
-            address: $address,
-            country: $country,
-            capacity: $capacity,
-            description: $description,
-            imageUrl: $imageUrl,
-        );
-
-        $venue->id = $id;
-        $venue->isActive = $isActive;
-        $venue->createdAt = $createdAt;
-        $venue->updatedAt = $updatedAt;
-
-        return $venue;
+        ?DateTimeImmutable $updatedAt,
+    ) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->slug = $slug;
+        $this->city = $city;
+        $this->address = $address;
+        $this->country = $country;
+        $this->capacity = $capacity;
+        $this->description = $description;
+        $this->imageUrl = $imageUrl;
+        $this->isActive = $isActive;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
     }
 
-    public function id(): VenueId
+    public function id(): string
     {
         return $this->id;
     }
@@ -146,35 +132,5 @@ class Venue
     {
         return $this->updatedAt;
     }
-
-    public function activate(): void
-    {
-        if ($this->isActive()) {
-            return;
-        }
-
-        $this->isActive = true;
-        $this->touch();
-    }
-
-    public function deactivate(): void
-    {
-        if ($this->isActive()) {
-            return;
-        }
-
-        $this->isActive = false;
-        $this->touch();
-    }
-
-    public function rename(string $name): void
-    {
-        $this->name = $name;
-        $this->touch();
-    }
-
-    public function touch(): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
-    }
 }
+

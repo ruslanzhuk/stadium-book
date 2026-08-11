@@ -29,5 +29,8 @@ services:
 
     Symfony\Component\PasswordHasher\PasswordHasherInterface: '@Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher'
 
+    App\CatalogContext\Domain\Venue\VenueRepository:
+        alias: App\CatalogContext\Infrastructure\Persistence\Doctrine\Repository\DoctrineVenueRepository
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

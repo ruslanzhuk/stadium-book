@@ -2,57 +2,41 @@
 
 namespace App\CatalogContext\Domain\Venue;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'venue_seats')]
 class VenueSeat
 {
-    #[ORM\Id]
-    #[ORM\Embedded(class: VenueSeatId::class)]
     private VenueSeatId $id;
 
-    #[ORM\Embedded(class: VenueRowId::class, columnPrefix: "row_")]
     private VenueRowId $rowId;
 
-    #[ORM\Column(type: 'string', length: 25, nullable: false)]
     private string $seatLabel;
 
-    #[ORM\Column(type: 'string', length: 25)]
     private string $seatType = 'standard';
 
-    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $xPos = null;
 
-    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $yPos = null;
 
-    #[ORM\Column(type: 'float')]
     private float $width = 1.0;
-    #[ORM\Column(type: 'float')]
     private float $height = 1.0;
 
-    #[ORM\Column(type: 'float')]
-    private float $rotation = 0;
+    private float $rotation = 0.0;
 
-    #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
 
-    #[ORM\Column]
     private DateTimeImmutable $createdAt;
-    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
     public function __construct(
         VenueRowId $rowId,
         string $seatLabel,
-        string $seatType,
-        float $xPos,
-        float $yPos,
-        float $width,
-        float $height,
-        float $rotation,
+        float $width = 1.0,
+        float $height = 1.0,
+        float $rotation = 0.0,
+        string $seatType = 'standard',
+        ?float $xPos = null,
+        ?float $yPos = null,
     )
     {
         $this->rowId = $rowId;
@@ -67,6 +51,39 @@ class VenueSeat
         $this->createdAt = new DateTimeImmutable();
 
         $this->id = VenueSeatId::generate();
+    }
+
+    public static function reconstitute(
+        VenueSeatId $id,
+        VenueRowId $rowId,
+        string $seatLabel,
+        string $seatType,
+        ?float $xPos,
+        ?float $yPos,
+        float $width,
+        float $height,
+        float $rotation,
+        bool $isActive,
+        DateTimeImmutable $createdAt,
+        ?DateTimeImmutable $updatedAt
+    ) {
+        $venueSeat = new VenueSeat(
+            rowId: $rowId,
+            seatLabel: $seatLabel,
+            width: $width,
+            height: $height,
+            rotation: $rotation,
+            seatType: $seatType,
+            xPos: $xPos,
+            yPos: $yPos,
+        );
+
+        $venueSeat->id = $id;
+        $venueSeat->isActive = $isActive;
+        $venueSeat->createdAt = $createdAt;
+        $venueSeat->updatedAt = $updatedAt;
+
+        return $venueSeat;
     }
 
     public function id(): VenueSeatId
@@ -84,11 +101,6 @@ class VenueSeat
         return $this->seatLabel;
     }
 
-    public function fullLabel(): string
-    {
-        return $this->fullLabel;
-    }
-
     public function seatType(): string
     {
         return $this->seatType;
@@ -104,17 +116,17 @@ class VenueSeat
         return $this->yPos;
     }
 
-    public function width(): ?float
+    public function width(): float
     {
         return $this->width;
     }
 
-    public function height(): ?float
+    public function height(): float
     {
         return $this->height;
     }
 
-    public function rotation(): ?float
+    public function rotation(): float
     {
         return $this->rotation;
     }
@@ -122,6 +134,16 @@ class VenueSeat
     public function isActive(): bool
     {
         return $this->isActive;
+    }
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 
     public function activate(): void

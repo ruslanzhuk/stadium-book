@@ -2,33 +2,23 @@
 
 namespace App\CatalogContext\Domain\Venue;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 
-#[ORM\Entity]
-#[ORM\Table(name: "venue_rows")]
 class VenueRow
 {
-    #[ORM\Id]
-    #[ORM\Embedded(class: VenueRowId::class)]
     private VenueRowId $id;
 
-    #[ORM\Embedded(class: VenueSectionId::class, columnPrefix: "section_")]
     private VenueSectionId $sectionId;
 
-    #[ORM\Column(type: "string", length: 25, nullable: false)]
     private string $rowLabel;
 
-    #[ORM\Column(type: 'integer')]
     private int $displayOrder = 0;
 
-    #[ORM\Column(type: 'integer', nullable: false)]
     private int $capacity;
 
-    #[ORM\Column]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(nullable: true)]
+
     private ?DateTimeImmutable $updatedAt = null;
 
     public function __construct(
@@ -46,6 +36,30 @@ class VenueRow
         $this->createdAt = new DateTimeImmutable();
 
         $this->id = VenueRowId::generate();
+    }
+
+    public static function reconstitute(
+        VenueRowId $id,
+        VenueSectionId $sectionId,
+        string $rowLabel,
+        int $displayOrder,
+        int $capacity,
+        DateTimeImmutable $createdAt,
+        ?DateTimeImmutable $updatedAt
+    ) {
+        $venueRow = new self(
+            sectionId: $sectionId,
+            rowLabel: $rowLabel,
+            displayOrder: $displayOrder,
+            capacity: $capacity,
+        );
+
+        $venueRow->id = $id;
+
+        $venueRow->createdAt = $createdAt;
+        $venueRow->updatedAt = $updatedAt;
+
+        return $venueRow;
     }
 
     public function id(): VenueRowId
@@ -71,6 +85,16 @@ class VenueRow
     public function capacity(): int
     {
         return $this->capacity;
+    }
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 
     public function touch(): void

@@ -22,6 +22,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/IdentityContext/Domain/'
                 prefix: 'App\IdentityContext\Domain'
 
+            Catalog:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/CatalogContext/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'App\CatalogContext\Infrastructure\Persistence\Doctrine\Entity'
+
 when@test:
     doctrine:
         dbal:
