@@ -159,7 +159,7 @@ class Venue
 
     public function deactivate(): void
     {
-        if ($this->isActive()) {
+        if (!$this->isActive()) {
             return;
         }
 

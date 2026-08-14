@@ -30,21 +30,23 @@ final class VenueMapper
         );
     }
 
-    public function toEntity(Venue $venue): VenueEntity
+    public function toEntity(Venue $venue, ?VenueEntity $entity): VenueEntity
     {
-        return new VenueEntity(
-            id: (string) $venue->id(),
-            name: $venue->name(),
-            slug: $venue->slug(),
-            city: $venue->city(),
-            address: $venue->address(),
-            country: $venue->country(),
-            capacity: $venue->capacity(),
-            description: $venue->description(),
-            imageUrl: $venue->imageUrl(),
-            isActive: $venue->isActive(),
-            createdAt: $venue->createdAt(),
-            updatedAt: $venue->updatedAt(),
-        );
+        $entity ??= new VenueEntity();
+
+        $entity->setId($venue->id());
+        $entity->setName($venue->name());
+        $entity->setSlug($venue->slug());
+        $entity->setCity($venue->city());
+        $entity->setAddress($venue->address());
+        $entity->setCountry($venue->country());
+        $entity->setCapacity($venue->capacity());
+        $entity->setDescription($venue->description());
+        $entity->setImageUrl($venue->imageUrl());
+        $entity->setIsActive($venue->isActive());
+        $entity->setCreatedAt($venue->createdAt());
+        $entity->setUpdatedAt($venue->updatedAt());
+
+        return $entity;
     }
 }

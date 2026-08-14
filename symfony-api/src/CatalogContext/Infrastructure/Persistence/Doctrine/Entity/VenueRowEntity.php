@@ -32,23 +32,8 @@ class VenueRowEntity
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    public function __construct(
-        string $id,
-        VenueSectionEntity $section,
-        string $rowLabel,
-        int $displayOrder,
-        int $capacity,
-        DateTimeImmutable $createdAt,
-        ?DateTimeImmutable $updatedAt
-    )
+    public function __construct()
     {
-        $this->id = $id;
-        $this->section = $section;
-        $this->rowLabel = $rowLabel;
-        $this->displayOrder = $displayOrder;
-        $this->capacity = $capacity;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
     }
 
     public function id(): string
@@ -84,5 +69,40 @@ class VenueRowEntity
     public function updatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setSection(VenueSectionEntity $section): void
+    {
+        $this->section = $section;
+    }
+
+    public function setRowLabel(string $rowLabel): void
+    {
+        $this->rowLabel = $rowLabel;
+    }
+
+    public function setDisplayOrder(int $displayOrder): void
+    {
+        $this->displayOrder = $displayOrder;
+    }
+
+    public function setCapacity(int $capacity): void
+    {
+        $this->capacity = $capacity;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

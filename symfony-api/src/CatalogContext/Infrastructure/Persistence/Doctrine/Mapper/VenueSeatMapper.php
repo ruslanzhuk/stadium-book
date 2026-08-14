@@ -28,21 +28,23 @@ final class VenueSeatMapper
         );
     }
 
-    public function toEntity(VenueSeat $venueSeat, VenueRowEntity $venueRowEntity): VenueSeatEntity
+    public function toEntity(VenueSeat $venueSeat, VenueRowEntity $venueRowEntity, ?VenueSeatEntity $entity): VenueSeatEntity
     {
-        return new VenueSeatEntity(
-            id: (string) $venueSeat->id(),
-            row: $venueRowEntity,
-            seatLabel: $venueSeat->seatLabel(),
-            seatType: $venueSeat->seatType(),
-            xPos: $venueSeat->xPos(),
-            yPos: $venueSeat->yPos(),
-            width: $venueSeat->width(),
-            height: $venueSeat->height(),
-            rotation: $venueSeat->rotation(),
-            isActive: $venueSeat->isActive(),
-            createdAt: $venueSeat->createdAt(),
-            updatedAt: $venueSeat->updatedAt(),
-        );
+        $entity ??= new VenueSeatEntity();
+
+        $entity->setId($venueSeat->id());
+        $entity->setRow($venueRowEntity);
+        $entity->setSeatLabel($venueSeat->seatLabel());
+        $entity->setSeatType($venueSeat->seatType());
+        $entity->setXPos($venueSeat->xPos());
+        $entity->setYPos($venueSeat->yPos());
+        $entity->setWidth($venueSeat->width());
+        $entity->setHeight($venueSeat->height());
+        $entity->setRotation($venueSeat->rotation());
+        $entity->setIsActive($venueSeat->isActive());
+        $entity->setCreatedAt($venueSeat->createdAt());
+        $entity->setUpdatedAt($venueSeat->updatedAt());
+
+        return $entity;
     }
 }

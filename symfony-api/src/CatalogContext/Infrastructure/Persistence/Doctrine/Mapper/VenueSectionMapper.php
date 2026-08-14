@@ -24,16 +24,18 @@ final class VenueSectionMapper
         );
     }
 
-    public function toEntity(VenueSection $venueSection, VenueEntity $venueEntity): VenueSectionEntity
+    public function toEntity(VenueSection $venueSection, VenueEntity $venueEntity, ?VenueSectionEntity $entity): VenueSectionEntity
     {
-        return new VenueSectionEntity(
-            id: (string) $venueSection->id(),
-            venue:  $venueEntity,
-            name: $venueSection->name(),
-            displayOrder: $venueSection->displayOrder(),
-            capacity: $venueSection->capacity(),
-            createdAt: $venueSection->createdAt(),
-            updatedAt: $venueSection->updatedAt(),
-        );
+        $entity ??= new VenueSectionEntity();
+
+        $entity->setId($venueSection->id());
+        $entity->setVenue($venueEntity);
+        $entity->setName($venueSection->name());
+        $entity->setDisplayOrder($venueSection->displayOrder());
+        $entity->setCapacity($venueSection->capacity());
+        $entity->setCreatedAt($venueSection->createdAt());
+        $entity->setUpdatedAt($venueSection->updatedAt());
+
+        return $entity;
     }
 }

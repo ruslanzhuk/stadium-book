@@ -45,33 +45,8 @@ class VenueSeatEntity
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    public function __construct(
-        string $id,
-        VenueRowEntity $row,
-        string $seatLabel,
-        string $seatType,
-        ?float $xPos,
-        ?float $yPos,
-        float $width,
-        float $height,
-        float $rotation,
-        bool $isActive,
-        DateTimeImmutable $createdAt,
-        ?DateTimeImmutable $updatedAt
-    )
+    public function __construct()
     {
-        $this->id = $id;
-        $this->row = $row;
-        $this->seatLabel = $seatLabel;
-        $this->seatType = $seatType;
-        $this->xPos = $xPos;
-        $this->yPos = $yPos;
-        $this->width = $width;
-        $this->height = $height;
-        $this->rotation = $rotation;
-        $this->isActive = $isActive;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
     }
 
     public function id(): string
@@ -132,5 +107,65 @@ class VenueSeatEntity
     public function updatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setRow(VenueRowEntity $row): void
+    {
+        $this->row = $row;
+    }
+
+    public function setSeatLabel(string $seatLabel): void
+    {
+        $this->seatLabel = $seatLabel;
+    }
+
+    public function setSeatType(string $seatType): void
+    {
+        $this->seatType = $seatType;
+    }
+
+    public function setXPos(?float $xPos): void
+    {
+        $this->xPos = $xPos;
+    }
+
+    public function setYPos(?float $yPos): void
+    {
+        $this->yPos = $yPos;
+    }
+
+    public function setWidth(float $width): void
+    {
+        $this->width = $width;
+    }
+
+    public function setHeight(float $height): void
+    {
+        $this->height = $height;
+    }
+
+    public function setRotation(float $rotation): void
+    {
+        $this->rotation = $rotation;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

@@ -45,32 +45,8 @@ class VenueEntity
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    public function __construct(
-        string $id,
-        string $name,
-        string $slug,
-        string $city,
-        string $address,
-        string $country,
-        int $capacity,
-        ?string $description,
-        ?string $imageUrl,
-        bool $isActive,
-        DateTimeImmutable $createdAt,
-        ?DateTimeImmutable $updatedAt,
-    ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->city = $city;
-        $this->address = $address;
-        $this->country = $country;
-        $this->capacity = $capacity;
-        $this->description = $description;
-        $this->imageUrl = $imageUrl;
-        $this->isActive = $isActive;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+    public function __construct()
+    {
     }
 
     public function id(): string
@@ -131,6 +107,66 @@ class VenueEntity
     public function updatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
+    public function setCity(string $city): void
+    {
+        $this->city = $city;
+    }
+
+    public function setAddress(string $address): void
+    {
+        $this->address = $address;
+    }
+
+    public function setCountry(string $country): void
+    {
+        $this->country = $country;
+    }
+
+    public function setCapacity(int $capacity): void
+    {
+        $this->capacity = $capacity;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function setImageUrl(?string $imageUrl): void
+    {
+        $this->imageUrl = $imageUrl;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }
 
