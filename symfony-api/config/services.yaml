@@ -20,7 +20,7 @@ services:
         resource: '../src/'
 
     App\IdentityContext\Domain\User\UserRepository:
-        alias: App\IdentityContext\Infrastructure\Persistence\DoctrineUserRepository
+        alias: App\IdentityContext\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository
 
     App\IdentityContext\Domain\User\PasswordHasher:
         alias: App\IdentityContext\Infrastructure\Security\SymfonyPasswordHasher
