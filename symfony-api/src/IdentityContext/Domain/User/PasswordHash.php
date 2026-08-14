@@ -2,13 +2,9 @@
 
 namespace App\IdentityContext\Domain\User;
 
-use Doctrine\ORM\Mapping as ORM;
 
-
-#[ORM\Embeddable]
 final readonly class PasswordHash
 {
-    #[ORM\Column(name: 'password_hash', length: 255)]
     private string $value;
 
     public function __construct(string $value)
@@ -28,5 +24,10 @@ final readonly class PasswordHash
     public function equals(PasswordHash $other): bool
     {
         return $this->value === $other->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
     }
 }

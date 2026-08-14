@@ -3,13 +3,9 @@
 namespace App\IdentityContext\Domain\User;
 
 use App\IdentityContext\Domain\User\Exception\InvalidEmailException;
-use Doctrine\ORM\Mapping as ORM;
 
-
-#[ORM\Embeddable]
 final class Email
 {
-    #[ORM\Column(name: 'email', length: 180, unique: true)]
     private string $value;
     public function __construct(string $value)
     {

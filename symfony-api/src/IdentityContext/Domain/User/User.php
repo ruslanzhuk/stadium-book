@@ -2,36 +2,21 @@
 
 namespace App\IdentityContext\Domain\User;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'users')]
 final class User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
     private ?int $id;
-    #[ORM\Embedded(class: Email::class)]
     private Email $email;
-    #[ORM\Embedded(class: PasswordHash::class)]
     private PasswordHash $passwordHash;
-    #[ORM\Column(length: 100)]
     private string $firstName;
-    #[ORM\Column(length: 100)]
     private string $lastName;
 
     /** @var list<string> */
-    #[ORM\Column(type: 'json')]
     private array $roles = ['ROLE_USER'];
-    #[ORM\Column]
     private DateTimeImmutable $createdAt;
-    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
-    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $deletedAt = null;
-    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $emailVerifiedAt = null;
 
 
@@ -51,6 +36,35 @@ final class User
         $this->createdAt = new DateTimeImmutable();
 
         $this->id = null;
+    }
+
+    public static function reconstitute(
+        int $id,
+        Email $email,
+        PasswordHash $passwordHash,
+        string $firstName,
+        string $lastName,
+        array $roles,
+        DateTimeImmutable $createdAt,
+        ?DateTimeImmutable $updatedAt,
+        ?DateTimeImmutable $deletedAt,
+        ?DateTimeImmutable $emailVerifiedAt
+    ): self {
+        $user = new User(
+            $email,
+            $passwordHash,
+            $firstName,
+            $lastName,
+        );
+
+        $user->id = $id;
+        $user->roles = $roles;
+        $user->createdAt = $createdAt;
+        $user->updatedAt = $updatedAt;
+        $user->deletedAt = $deletedAt;
+        $user->emailVerifiedAt = $emailVerifiedAt;
+
+        return $user;
     }
 
     public function id(): ?int
@@ -87,6 +101,26 @@ final class User
         }
 
         return array_values(array_unique($roles));
+    }
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function deletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function emailVerifiedAt(): ?DateTimeImmutable
+    {
+        return $this->emailVerifiedAt;
     }
 
     public function hasRole(string $role): bool
